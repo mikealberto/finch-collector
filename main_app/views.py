@@ -1,5 +1,5 @@
-from http.client import CannotSendHeader
 from django.shortcuts import render
+from .models import Finch
 
 # dummy data
 ##### Delete #####
@@ -13,8 +13,6 @@ from django.shortcuts import render
 # finches = [
 #     Finch("Beak", "House", "Well Studied", 4),
 #     Finch("Claw", "Cassin", "Long Head", 7),
-#     Finch("Chippy", "Cassia Crossbill", "Doesn't Migrate", 2),
-#     Finch("Falcon", "Shaft-tail", "Found in abudance", 0),
 # ]
 ###############
 
@@ -25,4 +23,10 @@ def about(request):
     return render(request, "about.html")
 
 def finches_index(request):
+    finches = Finch.objects.all()
     return render(request, "finches/index.html", {"finches": finches})
+
+#anticipating an incoming argument
+def finches_detail(request, finch_id):
+    finch = Finch.objects.get(id=finch_id)
+    return render(request, "finches/detail.html", {"finch": finch})
