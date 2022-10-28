@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView #a python class that exist in Django
 from .models import Finch
 
 # dummy data
@@ -9,11 +10,6 @@ from .models import Finch
 #         self.species = species
 #         self.description = description
 #         self.age = age
-
-# finches = [
-#     Finch("Beak", "House", "Well Studied", 4),
-#     Finch("Claw", "Cassin", "Long Head", 7),
-# ]
 ###############
 
 def home(request):
@@ -30,3 +26,9 @@ def finches_index(request):
 def finches_detail(request, finch_id):
     finch = Finch.objects.get(id=finch_id)
     return render(request, "finches/detail.html", {"finch": finch})
+
+#it will inherit from the CreateView Class
+class FinchCreate(CreateView):
+    model = Finch
+    fields = "__all__" #So that form has input for the field in our models
+    # success_url = "/finches/"
