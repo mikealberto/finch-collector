@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView #a python class that exist in Django
+#a python class that exist in Django
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Finch
 
 # dummy data
@@ -32,3 +33,13 @@ class FinchCreate(CreateView):
     model = Finch
     fields = "__all__" #So that form has input for the field in our models
     # success_url = "/finches/"
+
+class FinchUpdate(UpdateView):
+    model = Finch
+    #disallow renaming the species of a bird
+    fields = ["name", "description", "age"]
+
+class FinchDelete(DeleteView):
+    model = Finch
+    #can't use get method since there is no id available after you delete a bird 
+    success_url = "/finches/"
