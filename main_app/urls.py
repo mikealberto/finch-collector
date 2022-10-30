@@ -9,4 +9,7 @@ urlpatterns = [
     path("finches/create/", views.FinchCreate.as_view(), name="finches_create"),
     path("finches/<int:pk>/update/", views.FinchUpdate.as_view(), name="finches_update"),
     path("finches/<int:pk>/delete/", views.FinchDelete.as_view(), name="finches_delete"),
+    #need a path for capturing the finches id when creating a Feeding object
+    # path to add a feeding to a particular cat
+    path("finches/<int:finch_id>/add_feeding/", views.add_feeding, name="add_feeding")
 ]

@@ -24,7 +24,7 @@ class Finch(models.Model):
 
 #inherit models.Model otherwise it is a python class and not a django model
 class Feeding (models.Model): 
-    date = models.DateField()
+    date = models.DateField("Feeding Date")
     meal = models.CharField(
         max_length=1,
         # choices field option
@@ -42,3 +42,7 @@ class Feeding (models.Model):
         #django creates this method out of which object attribute has choice
         #returns the 2nd values of meals tuple
         return f"{self.get_meal_display()} on {self.date}"
+
+    # #for any feeding set it wil make sure to have the dates in descending order 
+    class Meta:
+        ordering = ['-date']

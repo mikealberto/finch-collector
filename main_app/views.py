@@ -1,17 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 #a python class that exist in Django
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Finch
-
-# dummy data
-##### Delete #####
-# class Finch:
-#     def __init__(self, name, species, description, age):
-#         self.name = name
-#         self.species = species
-#         self.description = description
-#         self.age = age
-###############
+from .forms import FeedingForm 
 
 def home(request):
     return render(request, "home.html")
@@ -26,7 +17,9 @@ def finches_index(request):
 #anticipating an incoming argument
 def finches_detail(request, finch_id):
     finch = Finch.objects.get(id=finch_id)
-    return render(request, "finches/detail.html", {"finch": finch})
+    #not passing anything therefore it creates an empty form
+    feeding_form = FeedingForm()
+    return render(request, "finches/detail.html", {"finch": finch, "feeding_form": feeding_form})
 
 #it will inherit from the CreateView Class
 class FinchCreate(CreateView):
@@ -43,3 +36,16 @@ class FinchDelete(DeleteView):
     model = Finch
     #can't use get method since there is no id available after you delete a bird 
     success_url = "/finches/"
+
+def add_feeding(request, finch_id):
+    #creating a feeding form instance with a post request
+    #passing data from our detail form 
+    form = FeedingForm(request.POST)
+    if form.is_valid():
+        #form.save will return a new instance of the feeding
+        #commit=False prevents it from being saved in the database, it remains in memory
+
+        new_feeding = form.save(commit=False)
+        new_feeding.finch_id = finch_id
+        new_feeding.save()
+    return redirect("detail", finch_id=finch_id)
