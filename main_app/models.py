@@ -8,12 +8,26 @@ MEALS = (
     ("D", "Dinner")
 )
 
+#many to many model
+class Toy(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+    
+    #used by CBVs to redirect to the toy detail page
+    # and pass in a specific toy id
+    def get_absolute_url(self):
+        return reverse("toys_detail", kwargs = {"pk": self.id})
+
 # Create your models here.
 class Finch(models.Model): 
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=100) 
     description = models.TextField(max_length=250)
     age = models.IntegerField()
+    toys = models.ManyToManyField(Toy)
 
     def __str__(self):
         return self.name
