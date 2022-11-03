@@ -18,15 +18,28 @@ def finches_index(request):
 #anticipating an incoming argument
 def finches_detail(request, finch_id):
     finch = Finch.objects.get(id=finch_id)
+    # To get the toys that the finch does not have.
+    #First, create a list of toy ids that the finch does have
+    id_list = finch.toys.all().values_list("id")
+    #Querying for toys whos ids are not in the list using exclude
+    toys_finch_doesnt_have = Toy.objects.exclude(id__in=id_list)
     #not passing anything therefore it creates an empty form
     feeding_form = FeedingForm()
-    return render(request, "finches/detail.html", {"finch": finch, "feeding_form": feeding_form})
+    return render(
+        request, 
+        "finches/detail.html", 
+        {
+            "finch": finch, 
+            "feeding_form": feeding_form,
+            "toys": toys_finch_doesnt_have #List of toys
+        }
+    )
 
 #it will inherit from the CreateView Class
 class FinchCreate(CreateView):
     model = Finch
-    fields = "__all__" #So that form has input for the field in our models
-    # success_url = "/finches/"
+    #So that form has input for the field in our models"
+    fields = ["name", "species", "description", "age"]
 
 class FinchUpdate(UpdateView):
     model = Finch
@@ -49,6 +62,11 @@ def add_feeding(request, finch_id):
         new_feeding = form.save(commit=False)
         new_feeding.finch_id = finch_id
         new_feeding.save()
+    return redirect("detail", finch_id=finch_id)
+
+def assoc_toy(request, finch_id, toy_id):
+    # You can pass a toy's id instead of the whole toy object
+    Finch.objects.get(id=finch_id).toys.add(toy_id)
     return redirect("detail", finch_id=finch_id)
 
 class ToyList(ListView):

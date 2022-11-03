@@ -9,14 +9,18 @@ urlpatterns = [
     path("finches/create/", views.FinchCreate.as_view(), name="finches_create"),
     path("finches/<int:pk>/update/", views.FinchUpdate.as_view(), name="finches_update"),
     path("finches/<int:pk>/delete/", views.FinchDelete.as_view(), name="finches_delete"),
+
     #need a path for capturing the finches id when creating a Feeding object
     # path to add a feeding to a particular finch
     path("finches/<int:finch_id>/add_feeding/", views.add_feeding, name="add_feeding"),
-    
+
     #URL FOR TOYS
     path("toys/", views.ToyList.as_view(), name="toys_index"),
     path("toys/<int:pk>/", views.ToyDetail.as_view(), name="toys_detail"), 
     path("toys/create/", views.ToyCreate.as_view(), name="toys_create"),
     path("toys/<int:pk>/update/", views.ToyUpdate.as_view(), name="toys_update"),
     path("toys/<int:pk>/delete/", views.ToyDelete.as_view(), name="toys_delete"),
+
+    # Path to associate a toy with a finch (M:M)
+    path("finches/<int:finch_id>/assoc_toy/<int:toy_id>/", views.assoc_toy, name="assoc_toy"), 
 ]
